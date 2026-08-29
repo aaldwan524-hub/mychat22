@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دردشة عربية | الشات المباشر</title>
+<meta name="description" content="غرفة دردشة موبايل دردش واتعرف على أصدقاء شباب وبنات بدون تسجيل أو اشتراك مجانًا">
+<style type="text/css">
+* { margin: 0; padding: 0; box-sizing: border-box; }
+a { text-decoration: none; }
+body { background: #fff; font-family: 'Segoe UI', Tahoma, sans-serif; direction: rtl; }
+.header { background-color: #1895d2; padding: 10px 0; text-align: center; }
+.header > a { color: #fff; font: 26px 'Segoe UI', Tahoma; padding: 5px 10px; display: inline-block; }
+.header b { color: lavender; font: 15px 'Segoe UI'; display: block; margin-top: 5px; }
+.nav { background: rgba(55, 124, 168, 0.13); text-align: center; padding: 5px 0; }
+.nav a { padding: 8px 15px; color: steelblue; font: 13px 'Segoe UI', Tahoma; display: inline-block; }
+.nav a:hover { background: #f1f1f1; }
+.main { margin: 20px auto; text-align: center; max-width: 500px; padding: 0 10px; }
+.room { margin: 0 auto 15px; text-align: center; border: 1px solid lavender; background: #f9f9f9; padding: 15px; border-radius: 8px; }
+.room h1 { background: #E3F0F7; color: steelblue; padding: 10px 0; font: bold 18px 'Segoe UI', Tahoma; border-radius: 5px; }
+.room p { font: 15px 'Segoe UI', Tahoma; margin: 10px 0; color: #0069b4; line-height: 1.6; }
+.error { display: none; margin-bottom: 15px; padding: 10px; font: 15px 'Segoe UI'; background: darksalmon; color: maroon; border-radius: 5px; text-align: right; }
+.login { display: none; background: #f9f9f9; width: 100%; border: 1px solid lavender; margin-bottom: 15px; padding: 20px; border-radius: 8px; }
+.login .top { margin: 15px auto; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+#guest_username, #member_username, #member_password { width: 100%; max-width: 300px; padding: 8px; text-align: center; font: 18px 'Segoe UI'; border: 1px solid #ddd; border-radius: 5px; }
+select { padding: 8px; font: 16px 'Segoe UI'; border: 1px solid #ddd; text-align-last: center; border-radius: 5px; background: #fff; }
+input[type=submit] { display: block; margin: 15px auto 0; font: 20px 'Segoe UI'; background: #377ca8; color: #fff; padding: 8px 30px; border: 1px solid #2a6082; border-radius: 8px; cursor: pointer; }
+input[type=submit]:hover { background: #195B86; }
+.btn { display: inline-block; margin: 5px; color: #fff; background: #377ca8; padding: 8px 15px; border-radius: 5px; font: 16px 'Segoe UI'; border: 0; cursor: pointer; }
+#guest_btn, #guest_submit_btn { background: #f97360; }
+#google_btn { background: #003080; }
+.foot { margin: 20px auto; border-top: 1px solid #EEE; padding-top: 15px; text-align: center; font-size: 13px; color: #666; }
+.foot a { color: #1895d2; margin: 0 5px; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+     <a href="#">شات عربي حر</a>
+     <b>دردشة عربية مجانية ومستقلة</b>
+  </div>
+
+  <nav class="nav">
+     <a href="#">الرئيسية</a>
+     <a href="#">سياسة الخصوصية</a>
+     <a href="#">شروط الاستخدام</a>
+  </nav>
+
+  <div class="main">
+    
+    <div class="error" id="error"></div>
+
+    <!-- نموذج دخول الضيف -->
+    <div class="login" id="guest_box" style="display: block;">
+      <form id="guest_form">
+           <div class="top">
+            <input type="text" id="guest_username" maxlength="50" placeholder="الإسم المستعار" autocomplete="off" autofocus>
+           </div>
+           <div class="top">
+            <select id="guest_gender">
+             <option value="0" selected disabled>تحديد الجنس</option>
+             <option value="1">ذكر</option>
+             <option value="2">أنثى</option>
+            </select>
+            <select id="guest_age">
+             <option value="0" selected disabled>تحديد العمر</option>
+             <script>
+               for(let i=18; i<=80; i++) document.write('<option value="'+i+'">'+i+'</option>');
+             </script>
+            </select>
+           </div>
+           <input type="submit" value="دخول" id="guest_submit_btn">
+      </form>
+    </div>
+
+   </div>
+
+  <div class="foot">
+    <p>جميع الحقوق المحفوظة للموقع © 2026</p>
+  </div>
+
+<script>
+var system = {
+    error: "حدث خطأ ما",
+    invalidUsername: "يرجى إدخال اسم صالح لدخول الدردشة.",
+    selectAge: "يرجى تحديد عمرك للمتابعة",
+    selectGender: "يرجى تحديد جنسك للمتابعة",
+    selectAgeGender: "يرجى تحديد عمرك وجنسك للمتابعة"
+};
+
+function e(id) { return document.getElementById(id); }
+function err(text) { e('error').style.display = 'block'; e('error').innerText = text; }
+function clearerr() { e('error').style.display = 'none'; e('error').innerText = ''; }
+
+document.addEventListener('DOMContentLoaded', function() {
+  e('guest_form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var username = e('guest_username').value.trim();
+    var gender = parseInt(e('guest_gender').value, 10) || 0;
+    var age = parseInt(e('guest_age').value, 10) || 0;
+    
+    clearerr();
+    if (!username) { err(system.invalidUsername); return; }
+    if (!gender && !age) { err(system.selectAgeGender); return; }
+    if (!gender) { err(system.selectGender); return; }
+    if (!age) { err(system.selectAge); return; }
+    
+    // الانتقال المباشر لصفحة الدردشة أو إشعار النجاح الفعلي
+    alert("مرحباً بك " + username + "! جاري دخولك إلى غرفة الشات...");
+    
+    // يمكنك لاحقاً توجيهه لصفحة الشات الداخلية عبر:
+    // window.location.href = "chat.html";
+  });
+});
+</script>
+
+</body>
+</html>
